@@ -1,9 +1,10 @@
 import { hash } from 'bcryptjs';
-import { sign } from 'jsonwebtoken';
 
-import { PrismaUserRepository } from '../../domain/repositories/user/PrismaUserRepository';
-import { env } from '../config/env';
+import { IRefreshTokenRepository } from '../../domain/repositories/refreshToken/IRefreshTokenRepository';
+import { IUserRepository } from '../../domain/repositories/user/IUserRepository';
+import { EXP_TIME_IN_DAYS } from '../config/constants';
 import { EmailAlreadyUse } from '../errors/EmailAlreadyUse';
+import { TokenService } from '../services/TokenService';
 
 interface IInput {
   firstName: string;
@@ -14,7 +15,11 @@ interface IInput {
 }
 
 export class SignUpUseCase {
-  constructor(private readonly usersRepo: PrismaUserRepository) {}
+  constructor(
+    private readonly usersRepo: IUserRepository,
+    private readonly refreshTokenRepo: IRefreshTokenRepository,
+    private readonly tokenService: TokenService,
+  ) {}
 
   async execute({ firstName, lastName, email, password, photo }: IInput) {
     const emailAlreadyUse = await this.usersRepo.findByEmail(email);
@@ -33,15 +38,19 @@ export class SignUpUseCase {
       photo,
     });
 
-    const accessToken = sign(
-      {
-        sub: user.id,
-        role: user.roleId,
-      },
-      env.jwtSecret,
-      { expiresIn: '1d' },
-    );
+    const accessToken = await this.tokenService.generate({
+      id: user.id,
+      role: user.roleId,
+    });
 
-    return { accessToken };
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + EXP_TIME_IN_DAYS);
+
+    const refreshToken = this.refreshTokenRepo.create({
+      userId: user.id,
+      expiresAt,
+    });
+
+    return { accessToken, refreshToken };
   }
 }
