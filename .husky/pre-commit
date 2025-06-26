@@ -1,0 +1,10 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🔧 Verificando código com lint-staged..."
+yarn lint-staged > /dev/null 2>&1
+
+if [ $? -ne 0 ]; then
+  echo "❌ Erros de lint encontrados. Corrija antes de fazer commit."
+  exit 1
+fi

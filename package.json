@@ -1,0 +1,33 @@
+{
+  "name": "secure-auth-api",
+  "version": "1.0.0",
+  "description": "A robust Node.js API for authentication with JWT, OAuth2, refresh tokens and RBAC support.",
+  "main": "index.js",
+  "author": "Luiz Almeida",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint 'src/**/*.{ts,tsx}' --fix",
+    "dev": "tsx watch src/index.ts",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.10.1",
+    "prisma": "^6.10.1",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.4",
+    "@typescript-eslint/eslint-plugin": "^8.35.0",
+    "@typescript-eslint/parser": "^8.35.0",
+    "eslint": "^9.29.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prettier": "^5.5.1",
+    "husky": "^8.0.0",
+    "prettier": "^3.6.1",
+    "typescript-eslint": "^8.35.0",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "lint-staged": "^16.1.2"
+  }
+}
