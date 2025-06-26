@@ -1,1 +1,2 @@
-console.log('server started');
+import 'dotenv/config';
+import './server/index';
