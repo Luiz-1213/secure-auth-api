@@ -14,14 +14,14 @@ export class TokenService {
         sub: id,
         role,
       },
-      env.jwtSecret,
+      env.JWT_SECRET,
       { expiresIn: '1d' },
     );
   }
 
   async validate(token: string) {
     try {
-      const payload = verify(token, env.jwtSecret) as JwtPayload;
+      const payload = verify(token, env.JWT_SECRET) as JwtPayload;
 
       return { payload };
     } catch (error) {
