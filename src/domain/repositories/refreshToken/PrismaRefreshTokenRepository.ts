@@ -7,13 +7,13 @@ import {
 
 export class PrismaRefreshTokenRepository implements IRefreshTokenRepository {
   async findById(id: string) {
-    return prismaClient.refreshToken.findUnique({
+    return await prismaClient.refreshToken.findUnique({
       where: { id },
     });
   }
 
   async create({ userId, expiresAt }: ICreateToken) {
-    return prismaClient.refreshToken.create({
+    return await prismaClient.refreshToken.create({
       data: {
         userId,
         expiresAt,
@@ -21,8 +21,8 @@ export class PrismaRefreshTokenRepository implements IRefreshTokenRepository {
     });
   }
 
-  deleteById(id: string) {
-    prismaClient.refreshToken.delete({
+  async deleteById(id: string) {
+    await prismaClient.refreshToken.delete({
       where: { id },
     });
   }
