@@ -46,11 +46,11 @@ export class SignUpUseCase {
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + EXP_TIME_IN_DAYS);
 
-    const refreshToken = this.refreshTokenRepo.create({
+    const { id } = await this.refreshTokenRepo.create({
       userId: user.id,
       expiresAt,
     });
 
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken: id };
   }
 }

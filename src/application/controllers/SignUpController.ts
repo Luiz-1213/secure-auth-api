@@ -21,7 +21,7 @@ export class SignUpController implements IController {
       const { email, firstName, lastName, password, photo } =
         schema.parse(body);
 
-      const { accessToken } = await this.signUpUseCase.execute({
+      const { accessToken, refreshToken } = await this.signUpUseCase.execute({
         email,
         firstName,
         lastName,
@@ -31,7 +31,7 @@ export class SignUpController implements IController {
 
       return {
         statusCode: 201,
-        body: { accessToken },
+        body: { accessToken, refreshToken },
       };
     } catch (error) {
       if (error instanceof ZodError) {
