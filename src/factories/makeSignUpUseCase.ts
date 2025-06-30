@@ -1,13 +1,11 @@
 import { SignUpUseCase } from '../application/useCases/SignUpUseCase';
 
-import { makePrismaRefreshTokenRepository } from './makePrismaRefreshTokenRepository';
+import { makeAuthService } from './makeAuthService';
 import { makePrismaUserRepository } from './makePrismaUserRepository';
-import { makeTokenService } from './makeTokenService';
 
 export function makeSignUpUseCase() {
   const usersRepo = makePrismaUserRepository();
-  const refreshTokenRepo = makePrismaRefreshTokenRepository();
-  const tokenService = makeTokenService();
+  const authService = makeAuthService();
 
-  return new SignUpUseCase(usersRepo, refreshTokenRepo, tokenService);
+  return new SignUpUseCase(usersRepo, authService);
 }

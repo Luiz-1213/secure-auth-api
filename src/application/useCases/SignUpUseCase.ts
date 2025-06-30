@@ -1,10 +1,8 @@
 import { hash } from 'bcryptjs';
 
-import { IRefreshTokenRepository } from '../../domain/repositories/refreshToken/IRefreshTokenRepository';
 import { IUserRepository } from '../../domain/repositories/user/IUserRepository';
-import { EXP_TIME_IN_DAYS } from '../config/constants';
 import { EmailAlreadyUse } from '../errors/EmailAlreadyUse';
-import { TokenService } from '../services/TokenService';
+import { AuthService } from '../services/AuthService';
 
 interface IInput {
   firstName: string;
@@ -17,8 +15,7 @@ interface IInput {
 export class SignUpUseCase {
   constructor(
     private readonly usersRepo: IUserRepository,
-    private readonly refreshTokenRepo: IRefreshTokenRepository,
-    private readonly tokenService: TokenService,
+    private readonly authService: AuthService,
   ) {}
 
   async execute({ firstName, lastName, email, password, photo }: IInput) {
@@ -38,19 +35,13 @@ export class SignUpUseCase {
       photo,
     });
 
-    const accessToken = await this.tokenService.generate({
-      id: user.id,
-      role: user.roleId,
-    });
+    const { accessToken, refreshToken } = await this.authService.generateTokens(
+      {
+        userId: user.id,
+        roleId: user.roleId,
+      },
+    );
 
-    const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + EXP_TIME_IN_DAYS);
-
-    const { id } = await this.refreshTokenRepo.create({
-      userId: user.id,
-      expiresAt,
-    });
-
-    return { accessToken, refreshToken: id };
+    return { accessToken, refreshToken };
   }
 }
