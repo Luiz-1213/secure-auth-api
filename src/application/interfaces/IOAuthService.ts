@@ -14,5 +14,5 @@ export interface IUserInfoResponse {
 export interface IOAuthService {
   getAccessToken({ code, redirectUri }: IGetAccessTokenParams): Promise<string>;
   getUserInfoResponse(accessToken: string): Promise<IUserInfoResponse>;
-  revokeAccessToken(accessToken: string): void;
+  revokeAccessToken(accessToken: string): Promise<void>;
 }
