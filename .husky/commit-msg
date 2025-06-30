@@ -1,11 +1,7 @@
 #!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
-echo "🔍 Verificando padrão da mensagem de commit..."
 ./node_modules/.bin/commitlint --edit "$1" > /dev/null 2>&1
 
 if [ $? -ne 0 ]; then
-  echo "❌ Mensagem de commit inválida. Use o padrão: tipo(escopo): descrição"
-  echo "   Exemplos: feat(auth): adiciona fluxo de login"
+  echo "❌ Invalid commit message. Use: type(scope): description"
   exit 1
 fi
