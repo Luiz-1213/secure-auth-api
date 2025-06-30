@@ -8,5 +8,5 @@ export interface ICreateToken {
 export interface IRefreshTokenRepository {
   findById(id: string): Promise<RefreshToken | null>;
   create({ userId, expiresAt }: ICreateToken): Promise<RefreshToken>;
-  deleteById(id: string): void;
+  deleteById(id: string): Promise<void>;
 }

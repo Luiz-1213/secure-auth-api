@@ -7,9 +7,18 @@ import {
 
 export class PrismaRefreshTokenRepository implements IRefreshTokenRepository {
   async findById(id: string) {
-    return await prismaClient.refreshToken.findUnique({
+    const refreshToken = await prismaClient.refreshToken.findUnique({
       where: { id },
+      include: { user: { select: { roleId: true } } },
     });
+
+    if (refreshToken === null) {
+      return null;
+    }
+
+    const { user, ...tokenData } = refreshToken;
+
+    return { ...tokenData, roleId: user.roleId };
   }
 
   async create({ userId, expiresAt }: ICreateToken) {
